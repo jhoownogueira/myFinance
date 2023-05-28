@@ -3,13 +3,35 @@ import { LoginContainer } from "@/styles/login/styles";
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from "next/router";
-import { FormEvent } from "react";
-import axios from 'axios';
+import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
 
 export default function Login() {
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
   const router = useRouter();
 
+  useEffect(() => {
+    const fetchAuthenticationStatus = async () => {
+      try {
+        const response = await api.get('/autenticated');
+        if (response.data.authenticated) {
+          setAuthenticated(true);
+          router.push('/dashboard');
+        } else {
+          alert('Por favor, insira suas credenciais.');
+          setLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+      }
+    };
+
+    fetchAuthenticationStatus();
+  }, [router]);
+
+  
   function submitLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push('/dashboard');
@@ -20,6 +42,10 @@ export default function Login() {
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     // Redirecionar o usuário para a página de autenticação do Google
     window.location.href = googleAuthUrl;
+  }
+
+  if (loading) {
+    return <div>Loading...</div>;
   }
 
   return (

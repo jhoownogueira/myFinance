@@ -24,13 +24,13 @@ const withPWA = require('next-pwa')({
       },
     },
     {
-      urlPattern: /^https:\/\/pokeapi\.co\/api\/v2\/pokemon/,
-      handler: 'StaleWhileRevalidate',
+      urlPattern: /^http:\/\/localhost/, // Adicione o padrão de URL do localhost
+      handler: 'CacheFirst',
       options: {
-        cacheName: 'pokeapi-data',
+        cacheName: 'localhost-cache',
         expiration: {
-          maxEntries: 6000,
-          maxAgeSeconds: 30 * 24 * 60 * 60, // 30 dias
+          maxEntries: 100,
+          maxAgeSeconds: 24 * 60 * 60, // 1 dia
         },
       },
     },
@@ -51,5 +51,7 @@ const withPWA = require('next-pwa')({
 })
 
 module.exports = withPWA({
-  // next.js config
+  images: {
+    domains: ['lh3.googleusercontent.com'],
+  }
 })
