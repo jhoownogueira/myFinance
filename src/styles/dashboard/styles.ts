@@ -1,7 +1,9 @@
 import styled from "styled-components";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 export const DashboardContainer = styled.section`
   width: 100%;
+  height: calc(100vh - 10rem);
   padding: 5rem 2rem;
   display: flex;
   flex-direction: column;
@@ -10,6 +12,7 @@ export const DashboardContainer = styled.section`
     width: 100%;
     height: 2.5rem;
     margin-top: 2.6rem;
+    margin-bottom: 2.6rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -68,6 +71,7 @@ export const DashboardContainer = styled.section`
         width: 280px;
         left: 3.2rem;
         top: 42px;
+        z-index: 10;
         background: ${props => props.theme["black-soft"]};
         border: 1px solid ${props => props.theme.hr};
         display: flex;
@@ -109,4 +113,335 @@ export const DashboardContainer = styled.section`
       }
     }
   }
+
+  section.date-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .styled-select-button {
+        width: 175px;
+        display: flex;
+        padding: 0.5rem 1rem;
+        align-items: center;
+        justify-content: space-between;
+        background: transparent;
+        border: 1px solid ${props => props.theme["hr"]};
+        border-radius: 8px;
+        cursor: pointer;
+        
+
+        &[aria-expanded="false"] {
+          svg {
+            transition: all 0.2s;
+            transform: rotate(0deg);
+          }
+        }
+
+        &[aria-expanded="true"] {
+          svg {
+            transition: all 0.2s;
+            transform: rotate(-90deg);
+          }
+        }
+      }
+
+      .styled-select-options {
+        position: absolute;
+        width: 280px;
+        right: 0;
+        top: 42px;
+        z-index: 10;
+        background: ${props => props.theme["black-soft"]};
+        border: 1px solid ${props => props.theme.hr};
+        display: flex;
+        flex-direction: column;
+        border-radius: 12px;
+        overflow: clip;
+
+        li {
+          padding: 0.8rem 1rem;
+          cursor: pointer;
+          &:hover {
+            background: ${props => props.theme.secondary};
+          }
+        }
+      }
+
+  }
+
+  section.transactions-content {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.75rem;
+    margin-bottom: 1.5rem;
+
+    .card {
+      width: 100%;
+      display: flex;
+      gap: 1rem;
+      border: 1px solid ${props => props.theme["hr"]};
+      padding: 1.5rem;
+      border-radius: 12px;
+
+      .icon {
+        min-width: 48px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        background: ${props => props.theme["black-soft"]};
+
+        svg {
+          color: ${props => props.theme["primary"]};
+        }
+      }
+
+      .info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        span {
+          font-weight: 500;
+          font-size: 0.75rem;
+          color: ${props => props.theme["secondary"]};
+        }
+        p {
+            font-weight: 500;
+            font-size: 1.5rem;
+            color: ${props => props.theme["text-white"]};
+        }
+      }
+    }
+  }
+
+  section.table-container {
+      width: 100%;
+
+      .table-header-container,
+      .table-body-container {
+        width: 100%;
+
+        table {
+          width: 100%;
+          text-align: left;
+          border-collapse: collapse;
+
+          thead,
+          tbody {
+            display: block;
+          }
+        }
+      }
+
+      .table-header-container {
+        table {
+          thead {
+            background: ${props => props.theme["black-soft"]};
+            border-radius: 12px 12px 0 0;
+            color: ${props => props.theme["text-white"]};
+            border: 1px solid ${props => props.theme["hr"]};
+            border-bottom: 0;
+          }
+        }
+      }
+
+      .table-body-container {
+        table {
+          tbody {
+            max-height: 420px;
+            overflow-y: auto;
+          }
+        }
+      }
+
+      table {
+        width: 100%;
+        tr {
+          width: 100%;
+          display: flex;
+          align-items: center;
+          height: 2.5rem;
+        }
+
+        th:nth-child(1),
+        td:nth-child(1) {
+          min-width: 170px;
+          max-width: 170px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0 0 1rem;
+        }
+
+        th:nth-child(2),
+        td:nth-child(2) {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0 0 1rem;
+        }
+        
+        th:nth-child(3),
+        td:nth-child(3) {
+          min-width: 130px;
+          max-width: 130px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0 0 1rem;
+        }
+
+        th:nth-child(4),
+        td:nth-child(4) {
+          min-width: 150px;
+          max-width: 150px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0 0 1rem;
+        }
+
+        th:nth-child(5),
+        td:nth-child(5) {
+          min-width: 120px;
+          max-width: 120px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0 0 1rem;
+        }
+
+        th:nth-child(6),
+        td:nth-child(6) {
+          min-width: 100px;
+          max-width: 100px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0 0 1rem;
+
+          span {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.5rem 1rem;
+            background: ${props => props.theme["black-soft"]};
+            border-radius: 8px;
+            color: ${props => props.theme["status-green"]};
+          }
+        }
+
+        th:nth-child(7),
+        td:nth-child(7) {
+          position: relative;
+          min-width: 100px;
+          max-width: 100px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          padding: 0 0 0 1rem;
+
+          .DropDownMenuButton {
+            position: absolute;
+            z-index: 12;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            transition: all 0.2s;
+            svg {
+              color: ${props => props.theme["text-white"]};
+            }
+
+            &:hover {
+                background: ${props => props.theme["bg"]};
+            }
+          }
+
+        }
+      }
+
+      .table-body-container {
+        table {
+          border-top: 1px solid ${props => props.theme["hr"]};
+          tbody {
+            tr {
+              background: ${props => props.theme["bg"]};
+              border-bottom: 1px solid ${props => props.theme["hr"]};
+              color: ${props => props.theme["text-white"]};
+              font-size: 0.875rem;
+              cursor: pointer;
+              height: 3.5rem;
+
+              &:hover {
+                background: ${props => props.theme["black-soft"]};
+                transition: all 0.2s;
+              }
+
+              td:nth-child(1), td:nth-child(2), td:nth-child(3), td:nth-child(4), td:nth-child(5), td:nth-child(6), td:nth-child(7) {
+                border-left: 1px solid ${props => props.theme["hr"]};
+                border-right: 1px solid ${props => props.theme["hr"]};
+              }
+
+            }
+          }
+        }
+      }
+
+      .table-footer-container {
+        width: 100%;
+        height: 16px;
+        background: ${props => props.theme["black-soft"]};
+        border-radius: 0 0 12px 12px;
+      }
+    }
+
+
+`
+
+export const DropDownMenuContent = styled(DropdownMenu.Content)`
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+
+`
+
+export const DropDownMenuItem = styled(DropdownMenu.Item)`
+  width: 150px;
+  padding: 0.5rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: ${props => props.theme["black-soft"]};
+  border: 0;
+  outline: 0;
+  font-size: 0.75rem;
+
+  &:hover {
+    background: ${props => props.theme["secondary"]};
+  }
+
+  &:first-child {
+    border-radius: 12px 12px 0 0;
+  }
+
+  &:last-child {
+    border-radius: 0 0 12px 12px;
+  }
+
 `
