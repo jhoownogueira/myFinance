@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { ContainerSpinner } from "@/styles/spinner/styles";
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
@@ -43,6 +44,14 @@ export default function Login() {
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     // Redirecionar o usuário para a página de autenticação do Google
     window.location.href = googleAuthUrl;
+
+    // Salvar o cookie recebido do backend
+    document.cookie = 'token=; path=/'; // Limpar o cookie anterior, se houver
+    document.cookie = 'refresh_token=; path=/'; // Limpar o cookie anterior, se houver
+
+    // Adicionar os novos cookies
+    document.cookie = `token=${Cookies.get('token')}; path=/;`;
+    document.cookie = `refresh_token=${Cookies.get('refresh_token')}; path=/;`;
   }
 
   if (loading) {
