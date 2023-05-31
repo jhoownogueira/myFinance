@@ -1,11 +1,11 @@
 import { MenuHeaderLayout } from "@/layouts/menuLayout";
 import { api } from "@/services/api";
-import { DashboardContainer, DeleteModal, DropDownMenuContent, DropDownMenuItem, NewTransactionModal, ToggleGroupContainer, ToggleGroupItem, TransactionModal } from "@/styles/dashboard/styles";
+import { DashboardContainer, DeleteModal, DropDownMenuContent, DropDownMenuItem, EditNewTransactionModal, NewTransactionModal, PayOffModal, ToggleGroupContainer, ToggleGroupItem, TransactionModal } from "@/styles/dashboard/styles";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Image from "next/image"
 import { Listbox } from '@headlessui/react'
-import { CaretLeft, Clock, DotsThree, Eraser, PencilSimple, Receipt, Wallet, X } from "@phosphor-icons/react";
+import { CaretLeft, CheckFat, Clock, DotsThree, Eraser, PencilSimple, Receipt, Wallet, X } from "@phosphor-icons/react";
 import Modal from "react-modal";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
@@ -56,7 +56,9 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
   const [newTransacitonModalIsOpen, setNewTransacitonModalIsOpen] = useState(false);
+  const [editNewTransacitonModalIsOpen, setEditNewTransacitonModalIsOpen] = useState(false);
   const [transactionModalIsOpen, setTransactionModalIsOpen] = useState(false);
+  const [payOffModalIsOpen, setPayOffModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(wallets[0])
   const startMonth = monthCurrentYear.find((month) => month.id === currentMonth);
@@ -69,11 +71,25 @@ export default function Dashboard() {
     setNewTransacitonModalIsOpen(false);
   }
 
+  function handleEditNewTransactionModalOpen() {
+    setEditNewTransacitonModalIsOpen(true);
+  }
+  function handleEditNewTransactionModalClose() {
+    setEditNewTransacitonModalIsOpen(false);
+  }
+
   function handleTransactionModalOpen() {
     setTransactionModalIsOpen(true);
   }
   function handleTransactionModalClose() {
     setTransactionModalIsOpen(false);
+  }
+
+  function handlePayOffModalOpen() {
+    setPayOffModalIsOpen(true);
+  }
+  function handlePayOffModalClose() {
+      setPayOffModalIsOpen(false);
   }
 
   function handleDeleteModalOpen() {
@@ -227,10 +243,19 @@ export default function Dashboard() {
 
                       <DropdownMenu.Portal>
                         <DropDownMenuContent>
+                        <DropDownMenuItem asChild>
+                            <button className="dropDownMenu-pay-off" aria-label="Quitar" onClick={(e) => {
+                              e.stopPropagation();
+                              handlePayOffModalOpen();
+                            }}>
+                              Quitar
+                              <CheckFat size={18} weight="fill" />
+                            </button>
+                          </DropDownMenuItem>
                           <DropDownMenuItem asChild>
                             <button className="dropDownMenu-edit" aria-label="Editar" onClick={(e) => {
                               e.stopPropagation();
-                              console.log("Editando")
+                              handleEditNewTransactionModalOpen();
                             }}>
                               Editar
                               <PencilSimple size={18} weight="fill" />
@@ -354,6 +379,62 @@ export default function Dashboard() {
       </Modal>
 
       <Modal
+        isOpen={editNewTransacitonModalIsOpen}
+        onRequestClose={handleEditNewTransactionModalClose}
+        ariaHideApp={false}
+        overlayClassName="react-modal-overlay"
+        className="react-modal-content"
+      >
+        <EditNewTransactionModal>
+          <header>
+            <h2>Editar lançamento</h2>
+            <button onClick={handleEditNewTransactionModalClose}>
+              <X size={24} />
+            </button>
+          </header>
+          <form>
+            <fieldset className="input-global">
+              <label>Descrição</label>
+              <input type="text" name="edit-new-description" placeholder="Ex. Pagamento energia elétrica" />
+            </fieldset>
+            <fieldset className="input-toggle">
+              <ToggleGroupContainer type="single" defaultValue="cost">
+                <ToggleGroupItem value="income">
+                  Receita
+                </ToggleGroupItem>
+                <ToggleGroupItem value="cost">
+                  Despesa
+                </ToggleGroupItem>
+              </ToggleGroupContainer>
+            </fieldset>
+            <fieldset className="input-global">
+              <label>Categoria</label>
+              <input type="text" name="edit-new-category" placeholder="Selecione uma categoria" />
+            </fieldset>
+            <div className="fieldset-flex">
+              <fieldset className="input-global">
+                <label>Vencimento</label>
+                <input type="text" name="edit-new-deadline" placeholder="Ex. 31/12/2028" />
+              </fieldset>
+              <fieldset className="input-global">
+                <label>Parcelas</label>
+                <input type="text" name="edit-new-parcel" placeholder="00" />
+              </fieldset>
+            </div>
+
+            <fieldset className="input-global">
+              <label>Valor</label>
+              <input type="text" name="edit-new-value" placeholder="R$0,00" />
+            </fieldset>
+            <footer>
+              <button className="close-edit" type="button" onClick={handleEditNewTransactionModalClose}>Cancelar</button>
+              <button className="save-transaction" type="button" onClick={() => console.log('Salvando')}>Salvar</button>
+            </footer>
+          </form>
+        </EditNewTransactionModal>
+      </Modal>
+
+      <Modal
         isOpen={transactionModalIsOpen}
         onRequestClose={handleTransactionModalClose}
         ariaHideApp={false}
@@ -436,6 +517,23 @@ export default function Dashboard() {
             <button className="cancel-delete" type="button" onClick={handleDeleteModalClose}>Cancelar</button>
           </footer>
         </DeleteModal>
+      </Modal>
+
+      <Modal
+        isOpen={payOffModalIsOpen}
+        onRequestClose={handlePayOffModalClose}
+        ariaHideApp={false}
+        overlayClassName="react-modal-overlay"
+        className="react-modal-content"
+      >
+        <PayOffModal>
+          <h2>Quitar transação?</h2>
+          <p>Você tem certeza que deseja quitar essa transação?</p>
+          <footer>
+            <button className="confirm-pay-off" type="button" onClick={() => console.log('Quitando')}>Quitar</button>
+            <button className="cancel-pay-off" type="button" onClick={handlePayOffModalClose}>Cancelar</button>
+          </footer>
+        </PayOffModal>
       </Modal>
     </>
   )

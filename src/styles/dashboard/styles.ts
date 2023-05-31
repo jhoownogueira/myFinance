@@ -72,7 +72,7 @@ export const DashboardContainer = styled.section`
         width: 280px;
         left: 3.2rem;
         top: 42px;
-        z-index: 10;
+        z-index: 15;
         background: ${props => props.theme["black-soft"]};
         border: 1px solid ${props => props.theme.hr};
         display: flex;
@@ -153,7 +153,7 @@ export const DashboardContainer = styled.section`
         width: 280px;
         right: 0;
         top: 42px;
-        z-index: 10;
+        z-index: 15;
         background: ${props => props.theme["black-soft"]};
         border: 1px solid ${props => props.theme.hr};
         display: flex;
@@ -414,8 +414,6 @@ export const DashboardContainer = styled.section`
 
 `
 
-
-
 export const NewTransactionModal = styled.div`
   width: 100%;
   display: flex;
@@ -488,6 +486,90 @@ export const NewTransactionModal = styled.div`
       }
 
       button.register {
+        width: 80%;
+        background: ${props => props.theme.secondary};
+        border: transparent;
+        color: ${props => props.theme["text-white"]};
+        transition: all 0.2s;
+        &:hover {
+          background: ${props => props.theme.primary};
+        }
+      }
+    }
+  }
+`
+export const EditNewTransactionModal = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1rem;
+
+    button {
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 0;
+      background: transparent;
+      outline: 0;
+
+      svg {
+        transition: all 0.2s;
+      }
+
+      &:hover {
+        svg {
+          color: ${props => props.theme["primary"]};
+        }
+      }
+    }
+  }
+
+  form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    fieldset.input-toggle {
+      width: 100%;
+      outline: 0;
+      border: 0;
+    }
+
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+
+      button {
+        height: 2.5rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+      }
+
+      button.close-edit {
+        width: 20%;        
+        background: transparent;
+        border: 1px solid ${props => props.theme["hr"]};
+        color: ${props => props.theme["hr"]};
+        transition: all 0.2s;
+        &:hover {
+          background: ${props => props.theme["hr"]};
+          color: ${props => props.theme["text-white"]};
+        }
+        
+      }
+
+      button.save-transaction {
         width: 80%;
         background: ${props => props.theme.secondary};
         border: transparent;
@@ -658,6 +740,47 @@ export const DeleteModal = styled.div`
     button.confirm-delete {
       border: transparent;
       background: #BC1421;
+      color: ${props => props.theme["text-white"]};
+    }
+  }
+`
+export const PayOffModal = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  h2 {
+    margin-top: 1.5rem;
+  }
+
+  footer {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 1rem;
+
+    button {
+      width: 100%;
+      height: 2.5rem;
+      max-width: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      border-radius: 6px;
+      outline: none;
+    }
+
+    button.cancel-pay-off {
+      border: 1px solid ${props => props.theme["secondary"]};
+      color: ${props => props.theme["secondary"]};
+      background: transparent;
+    }
+
+    button.confirm-pay-off {
+      border: transparent;
+      background: #4AB444;
       color: ${props => props.theme["text-white"]};
     }
   }
