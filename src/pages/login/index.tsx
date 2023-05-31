@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
+import { ContainerSpinner } from "@/styles/spinner/styles";
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,7 @@ export default function Login() {
     fetchAuthenticationStatus();
   }, [router]);
 
-  
+
   function submitLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push('/dashboard');
@@ -45,7 +46,13 @@ export default function Login() {
   }
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <ContainerSpinner>
+          <span className="loader"></span>
+        </ContainerSpinner>
+      </>
+    );
   }
 
   return (

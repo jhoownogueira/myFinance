@@ -9,6 +9,7 @@ import { CaretLeft, CheckFat, Clock, DotsThree, Eraser, PencilSimple, Receipt, W
 import Modal from "react-modal";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import * as ToggleGroup from '@radix-ui/react-toggle-group';
+import { ContainerSpinner } from "@/styles/spinner/styles";
 
 interface UserProps {
   id: number;
@@ -89,7 +90,7 @@ export default function Dashboard() {
     setPayOffModalIsOpen(true);
   }
   function handlePayOffModalClose() {
-      setPayOffModalIsOpen(false);
+    setPayOffModalIsOpen(false);
   }
 
   function handleDeleteModalOpen() {
@@ -122,7 +123,13 @@ export default function Dashboard() {
 
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <ContainerSpinner>
+          <span className="loader"></span>
+        </ContainerSpinner>
+      </>
+    );
   }
 
   return (
@@ -243,7 +250,7 @@ export default function Dashboard() {
 
                       <DropdownMenu.Portal>
                         <DropDownMenuContent>
-                        <DropDownMenuItem asChild>
+                          <DropDownMenuItem asChild>
                             <button className="dropDownMenu-pay-off" aria-label="Quitar" onClick={(e) => {
                               e.stopPropagation();
                               handlePayOffModalOpen();
