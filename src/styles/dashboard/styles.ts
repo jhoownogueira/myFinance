@@ -445,3 +445,125 @@ export const DropDownMenuItem = styled(DropdownMenu.Item)`
   }
 
 `
+
+export const TransactionModal = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+
+  header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    h2 {
+      font-weight: 500;
+      font-size: 1.2rem;
+    }
+
+    button {
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      
+      svg {
+        transition: all 0.2s;
+      }
+
+      &:hover {
+        svg {
+          color: ${props => props.theme["primary"]};
+        }
+      }
+    }
+  }
+
+  form {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    fieldset.input-type, fieldset.input-status {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      outline: none;
+      border: 0;
+    }
+
+    fieldset.input-type {
+      label {
+      width: 100%;
+      font-size: 0.875rem;
+      color: ${(props) => props.theme["gray-soft"]};
+    }
+
+      span {
+        width: 100%;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid #4AB444;
+        border-radius: 6px;
+        background: transparent;
+        color: #4AB444;
+        font-size: 1rem;
+      }
+    }
+
+    fieldset.input-status {
+      label {
+      width: 100%;
+      font-size: 0.875rem;
+      color: ${(props) => props.theme["gray-soft"]};
+    }
+
+      span {
+        width: 100%;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: transparent;
+        border-radius: 6px;
+        background: #4AB444;
+        color: ${props => props.theme["text-white"]};
+        font-size: 1rem;
+      }
+    }
+
+    button {
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 150px;
+      height: 2.5rem;
+      display: flex;
+      align-self: flex-end;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      background: transparent;
+      border: 1px solid ${props => props.theme["secondary"]};
+      color: ${props => props.theme["secondary"]};
+      font-size: 1rem;
+      transition: all 0.2s;
+
+      &:hover {
+        background: ${props => props.theme["secondary"]};
+        color: ${props => props.theme["text-white"]};
+      }
+    }
+  }
+
+`

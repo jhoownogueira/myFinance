@@ -1,11 +1,12 @@
 import { MenuHeaderLayout } from "@/layouts/menuLayout";
 import { api } from "@/services/api";
-import { DashboardContainer, DropDownMenuContent, DropDownMenuItem } from "@/styles/dashboard/styles";
+import { DashboardContainer, DropDownMenuContent, DropDownMenuItem, TransactionModal } from "@/styles/dashboard/styles";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Image from "next/image"
 import { Listbox } from '@headlessui/react'
-import { CaretLeft, Clock, DotsThree, Eraser, PencilSimple, Receipt, Wallet } from "@phosphor-icons/react";
+import { CaretLeft, Clock, DotsThree, Eraser, PencilSimple, Receipt, Wallet, X } from "@phosphor-icons/react";
+import Modal from "react-modal";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 interface UserProps {
@@ -16,50 +17,62 @@ interface UserProps {
   created_at: string;
 }
 
+function getCurrentYear() {
+  const currentYear = new Date().getFullYear();
+  return String(currentYear);
+}
+function getCurrentMonth() {
+  const currentMonth = new Date().getMonth() + 1;
+  return currentMonth;
+}
+
+const wallets = [
+  { id: 1, title: 'Carteira Jhonata' },
+  { id: 2, title: 'Carteira Familia' },
+  { id: 3, title: 'Carteira Poupança' },
+  { id: 4, title: 'Carteira Kiara' },
+]
+
+const currentMonth = getCurrentMonth();
+const year = getCurrentYear();
+const monthCurrentYear = [
+  { id: 1, title: 'Janeiro', ano: year },
+  { id: 2, title: 'Fevereiro', ano: year },
+  { id: 3, title: 'Março', ano: year },
+  { id: 4, title: 'Abril', ano: year },
+  { id: 5, title: 'Maio', ano: year },
+  { id: 6, title: 'Junho', ano: year },
+  { id: 7, title: 'Julho', ano: year },
+  { id: 8, title: 'Agosto', ano: year },
+  { id: 9, title: 'Setembro', ano: year },
+  { id: 10, title: 'Outubro', ano: year },
+  { id: 11, title: 'Novembro', ano: year },
+  { id: 12, title: 'Dezembro', ano: year },
+]
+
 export default function Dashboard() {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
-  const router = useRouter();
-
-  const wallets = [
-    { id: 1, title: 'Carteira Jhonata' },
-    { id: 2, title: 'Carteira Familia' },
-    { id: 3, title: 'Carteira Poupança' },
-    { id: 4, title: 'Carteira Kiara' },
-  ]
-
-  function getCurrentYear() {
-    const currentYear = new Date().getFullYear();
-    return String(currentYear);
-  }
-
-  function getCurrentMonth() {
-    const currentMonth = new Date().getMonth() + 1;
-    return currentMonth;
-  }
-
-  const currentMonth = getCurrentMonth();
-  const year = getCurrentYear();
-
-  const monthCurrentYear = [
-    { id: 1, title: 'Janeiro', ano: year },
-    { id: 2, title: 'Fevereiro', ano: year },
-    { id: 3, title: 'Março', ano: year },
-    { id: 4, title: 'Abril', ano: year },
-    { id: 5, title: 'Maio', ano: year },
-    { id: 6, title: 'Junho', ano: year },
-    { id: 7, title: 'Julho', ano: year },
-    { id: 8, title: 'Agosto', ano: year },
-    { id: 9, title: 'Setembro', ano: year },
-    { id: 10, title: 'Outubro', ano: year },
-    { id: 11, title: 'Novembro', ano: year },
-    { id: 12, title: 'Dezembro', ano: year },
-  ]
-
+  const [transactionModalIsOpen, setTransactionModalIsOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(wallets[0])
   const startMonth = monthCurrentYear.find((month) => month.id === currentMonth);
   const [selectedMonth, setSelectedMonth] = useState(startMonth ? startMonth : monthCurrentYear[0]);
 
+  function handleTransactionModalOpen() {
+    setTransactionModalIsOpen(true);
+  }
+  function handleTransactionModalClose() {
+    setTransactionModalIsOpen(false);
+  }
+
+  function handleDeleteModalOpen() {
+      setDeleteModalIsOpen(true);
+  }
+    function handleDeleteModalClose() {
+      setDeleteModalIsOpen(false);
+  }
 
   useEffect(() => {
     const fetchAuthenticationStatus = async () => {
@@ -188,7 +201,7 @@ export default function Dashboard() {
           <div className="table-body-container">
             <table>
               <tbody>
-                <tr onClick={() => console.log('Cliquei na table')}>
+                <tr onClick={(e) => { e.stopPropagation(); handleTransactionModalOpen(); }}>
                   <td>07/09/2022, 06:31</td>
                   <td>Empréstimo Banco</td>
                   <td>R$1.200,00</td>
@@ -196,23 +209,29 @@ export default function Dashboard() {
                   <td>Jhonata</td>
                   <td><span>Paga</span></td>
                   <td>
-                  <DropdownMenu.Root>
+                    <DropdownMenu.Root>
                       <DropdownMenu.Trigger className="DropDownMenuButton" asChild>
                         <button aria-label="Mais opções">
-                        <DotsThree size={28} />
+                          <DotsThree size={28} />
                         </button>
                       </DropdownMenu.Trigger>
 
                       <DropdownMenu.Portal>
                         <DropDownMenuContent>
                           <DropDownMenuItem asChild>
-                            <button className="dropDownMenu-edit" aria-label="Editar">
+                            <button className="dropDownMenu-edit" aria-label="Editar" onClick={(e) => {
+                              e.stopPropagation();
+                              console.log("Editando")
+                            }}>
                               Editar
                               <PencilSimple size={18} weight="fill" />
                             </button>
                           </DropDownMenuItem>
                           <DropDownMenuItem asChild>
-                            <button className="dropDownMenu-erase" aria-label="Apagar">
+                            <button className="dropDownMenu-erase" aria-label="Apagar" onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteModalOpen();
+                            }}>
                               Apagar
                               <Eraser size={18} weight="fill" />
                             </button>
@@ -233,20 +252,26 @@ export default function Dashboard() {
                     <DropdownMenu.Root>
                       <DropdownMenu.Trigger className="DropDownMenuButton" asChild>
                         <button aria-label="Mais opções">
-                        <DotsThree size={28} />
+                          <DotsThree size={28} />
                         </button>
                       </DropdownMenu.Trigger>
 
                       <DropdownMenu.Portal>
                         <DropDownMenuContent>
                           <DropDownMenuItem asChild>
-                            <button className="dropDownMenu-edit" aria-label="Editar">
+                            <button className="dropDownMenu-edit" aria-label="Editar" onClick={(e) => {
+                              e.stopPropagation();
+                              console.log("Editando")
+                            }}>
                               Editar
                               <PencilSimple size={18} weight="fill" />
                             </button>
                           </DropDownMenuItem>
                           <DropDownMenuItem asChild>
-                            <button className="dropDownMenu-erase" aria-label="Apagar">
+                            <button className="dropDownMenu-erase" aria-label="Apagar" onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteModalOpen();
+                            }}>
                               Apagar
                               <Eraser size={18} weight="fill" />
                             </button>
@@ -262,6 +287,83 @@ export default function Dashboard() {
           <div className="table-footer-container" />
         </section>
       </DashboardContainer>
+      <Modal
+        isOpen={transactionModalIsOpen}
+        onRequestClose={handleTransactionModalClose}
+        ariaHideApp={false}
+        overlayClassName="react-modal-overlay"
+        className="react-modal-content"
+      >
+        <TransactionModal>
+          <header>
+            <h2>Mais informações</h2>
+            <button onClick={handleTransactionModalClose}>
+            <X size={24} />
+            </button>
+          </header>
+          <form>
+            <fieldset className="input-global">
+              <label>Descrição</label>
+              <input type="text" name="description" value="Ração para a Kiara" readOnly />
+            </fieldset>
+            <fieldset className="input-global">
+              <label>Categoria</label>
+              <input type="text" name="category" value="Kiara" readOnly/>
+            </fieldset>
+            <div className="fieldset-flex">
+              <fieldset className="input-global">
+                <label>Valor</label>
+                <input type="text" name="amount" value="R$158,00" readOnly/>
+              </fieldset>
+              <fieldset className="input-global">
+                <label>Parcelas restantes</label>
+                <input type="text" name="parcelsMissing" value="00" readOnly/>
+              </fieldset>
+            </div>
+            <div className="fieldset-flex">
+              <fieldset className="input-global">
+                <label>Data</label>
+                <input type="text" name="date" value="31/05/2023" readOnly/>
+              </fieldset>
+              <fieldset className="input-global">
+                <label>Hora</label>
+                <input type="text" name="hour" value="10:51:32" readOnly/>
+              </fieldset>
+            </div>
+            <div className="fieldset-flex">
+              <fieldset className="input-global">
+                <label>Lançado por</label>
+                <input type="text" name="releasedBy" value="Jhonata Nogueira" readOnly/>
+              </fieldset>
+              <fieldset className="input-global">
+                <label>Carteira</label>
+                <input type="text" name="hour" value="Carteira Jhonata" readOnly/>
+              </fieldset>
+            </div>
+            <div className="fieldset-flex">
+              <fieldset className="input-type">
+                <label>Tipo</label>
+                <span>Receita</span>
+              </fieldset>
+              <fieldset className="input-status">
+                <label>Status</label>
+                <span>Recebido</span>
+              </fieldset>
+            </div>
+            <button type="button" onClick={handleTransactionModalClose}>Voltar</button>
+          </form>
+        </TransactionModal>
+      </Modal>
+
+      <Modal
+        isOpen={deleteModalIsOpen}
+        onRequestClose={handleDeleteModalClose}
+        ariaHideApp={false}
+        overlayClassName="react-modal-overlay"
+        className="react-modal-content"
+      >
+        <h2>Delete</h2>
+      </Modal>
     </>
   )
 }
