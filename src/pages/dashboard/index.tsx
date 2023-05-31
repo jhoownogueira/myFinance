@@ -1,6 +1,6 @@
 import { MenuHeaderLayout } from "@/layouts/menuLayout";
 import { api } from "@/services/api";
-import { DashboardContainer, DropDownMenuContent, DropDownMenuItem, TransactionModal } from "@/styles/dashboard/styles";
+import { DashboardContainer, DeleteModal, DropDownMenuContent, DropDownMenuItem, NewTransactionModal, ToggleGroupContainer, ToggleGroupItem, TransactionModal } from "@/styles/dashboard/styles";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Image from "next/image"
@@ -8,6 +8,7 @@ import { Listbox } from '@headlessui/react'
 import { CaretLeft, Clock, DotsThree, Eraser, PencilSimple, Receipt, Wallet, X } from "@phosphor-icons/react";
 import Modal from "react-modal";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import * as ToggleGroup from '@radix-ui/react-toggle-group';
 
 interface UserProps {
   id: number;
@@ -54,11 +55,19 @@ export default function Dashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
+  const [newTransacitonModalIsOpen, setNewTransacitonModalIsOpen] = useState(false);
   const [transactionModalIsOpen, setTransactionModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
   const [selectedWallet, setSelectedWallet] = useState(wallets[0])
   const startMonth = monthCurrentYear.find((month) => month.id === currentMonth);
   const [selectedMonth, setSelectedMonth] = useState(startMonth ? startMonth : monthCurrentYear[0]);
+
+  function handleNewTransactionModalOpen() {
+    setNewTransacitonModalIsOpen(true);
+  }
+  function handleNewTransactionModalClose() {
+    setNewTransacitonModalIsOpen(false);
+  }
 
   function handleTransactionModalOpen() {
     setTransactionModalIsOpen(true);
@@ -68,10 +77,10 @@ export default function Dashboard() {
   }
 
   function handleDeleteModalOpen() {
-      setDeleteModalIsOpen(true);
+    setDeleteModalIsOpen(true);
   }
-    function handleDeleteModalClose() {
-      setDeleteModalIsOpen(false);
+  function handleDeleteModalClose() {
+    setDeleteModalIsOpen(false);
   }
 
   useEffect(() => {
@@ -132,7 +141,7 @@ export default function Dashboard() {
             </Listbox>
             <span>R$1.500,00</span>
           </div>
-          <button className="new-release">Novo lançamento</button>
+          <button className="new-release" onClick={handleNewTransactionModalOpen}>Novo lançamento</button>
         </header>
         <section className="date-content">
           <span>{selectedMonth.title}/{selectedMonth.ano}</span>
@@ -287,6 +296,63 @@ export default function Dashboard() {
           <div className="table-footer-container" />
         </section>
       </DashboardContainer>
+
+      <Modal
+        isOpen={newTransacitonModalIsOpen}
+        onRequestClose={handleNewTransactionModalClose}
+        ariaHideApp={false}
+        overlayClassName="react-modal-overlay"
+        className="react-modal-content"
+      >
+        <NewTransactionModal>
+          <header>
+            <h2>Novo lançamento</h2>
+            <button onClick={handleNewTransactionModalClose}>
+              <X size={24} />
+            </button>
+          </header>
+          <form>
+            <fieldset className="input-global">
+              <label>Descrição</label>
+              <input type="text" name="new-description" placeholder="Ex. Pagamento energia elétrica" />
+            </fieldset>
+            <fieldset className="input-toggle">
+              <ToggleGroupContainer type="single" defaultValue="cost">
+                <ToggleGroupItem value="income">
+                  Receita
+                </ToggleGroupItem>
+                <ToggleGroupItem value="cost">
+                  Despesa
+                </ToggleGroupItem>
+              </ToggleGroupContainer>
+            </fieldset>
+            <fieldset className="input-global">
+              <label>Categoria</label>
+              <input type="text" name="new-category" placeholder="Selecione uma categoria" />
+            </fieldset>
+            <div className="fieldset-flex">
+              <fieldset className="input-global">
+                <label>Vencimento</label>
+                <input type="text" name="new-deadline" placeholder="Ex. 31/12/2028" />
+              </fieldset>
+              <fieldset className="input-global">
+                <label>Parcelas</label>
+                <input type="text" name="new-parcel" placeholder="00" />
+              </fieldset>
+            </div>
+
+            <fieldset className="input-global">
+              <label>Valor</label>
+              <input type="text" name="new-value" placeholder="R$0,00" />
+            </fieldset>
+            <footer>
+              <button className="close" type="button" onClick={handleNewTransactionModalClose}>Cancelar</button>
+              <button className="register" type="button" onClick={() => console.log('Cadastrado')}>Cadastrar</button>
+            </footer>
+          </form>
+        </NewTransactionModal>
+      </Modal>
+
       <Modal
         isOpen={transactionModalIsOpen}
         onRequestClose={handleTransactionModalClose}
@@ -298,7 +364,7 @@ export default function Dashboard() {
           <header>
             <h2>Mais informações</h2>
             <button onClick={handleTransactionModalClose}>
-            <X size={24} />
+              <X size={24} />
             </button>
           </header>
           <form>
@@ -308,36 +374,36 @@ export default function Dashboard() {
             </fieldset>
             <fieldset className="input-global">
               <label>Categoria</label>
-              <input type="text" name="category" value="Kiara" readOnly/>
+              <input type="text" name="category" value="Kiara" readOnly />
             </fieldset>
             <div className="fieldset-flex">
               <fieldset className="input-global">
                 <label>Valor</label>
-                <input type="text" name="amount" value="R$158,00" readOnly/>
+                <input type="text" name="amount" value="R$158,00" readOnly />
               </fieldset>
               <fieldset className="input-global">
                 <label>Parcelas restantes</label>
-                <input type="text" name="parcelsMissing" value="00" readOnly/>
+                <input type="text" name="parcelsMissing" value="00" readOnly />
               </fieldset>
             </div>
             <div className="fieldset-flex">
               <fieldset className="input-global">
                 <label>Data</label>
-                <input type="text" name="date" value="31/05/2023" readOnly/>
+                <input type="text" name="date" value="31/05/2023" readOnly />
               </fieldset>
               <fieldset className="input-global">
                 <label>Hora</label>
-                <input type="text" name="hour" value="10:51:32" readOnly/>
+                <input type="text" name="hour" value="10:51:32" readOnly />
               </fieldset>
             </div>
             <div className="fieldset-flex">
               <fieldset className="input-global">
                 <label>Lançado por</label>
-                <input type="text" name="releasedBy" value="Jhonata Nogueira" readOnly/>
+                <input type="text" name="releasedBy" value="Jhonata Nogueira" readOnly />
               </fieldset>
               <fieldset className="input-global">
                 <label>Carteira</label>
-                <input type="text" name="hour" value="Carteira Jhonata" readOnly/>
+                <input type="text" name="hour" value="Carteira Jhonata" readOnly />
               </fieldset>
             </div>
             <div className="fieldset-flex">
@@ -362,7 +428,14 @@ export default function Dashboard() {
         overlayClassName="react-modal-overlay"
         className="react-modal-content"
       >
-        <h2>Delete</h2>
+        <DeleteModal>
+          <h2>Apagar transação?</h2>
+          <p>Você tem certeza que deseja apagar essa transação?</p>
+          <footer>
+            <button className="confirm-delete" type="button" onClick={() => console.log('Deletado')}>Deletar</button>
+            <button className="cancel-delete" type="button" onClick={handleDeleteModalClose}>Cancelar</button>
+          </footer>
+        </DeleteModal>
       </Modal>
     </>
   )
