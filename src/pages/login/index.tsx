@@ -42,6 +42,7 @@ export default function Login() {
   function loginWithGoogle() {
     // URL da autenticação do Google
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
+    console.log(googleAuthUrl);
     // Redirecionar o usuário para a página de autenticação do Google
     window.location.href = googleAuthUrl;
 
