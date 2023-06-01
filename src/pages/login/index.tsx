@@ -6,7 +6,6 @@ import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { ContainerSpinner } from "@/styles/spinner/styles";
-import Cookies from 'js-cookie';
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
@@ -16,9 +15,10 @@ export default function Login() {
   useEffect(() => {
     const fetchAuthenticationStatus = async () => {
       try {
+        const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
         const response = await api.get('/autenticated', {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
+            'Authorization': `Bearer ${token}`
           }
         });
         if (response.data.authenticated) {
@@ -35,6 +35,27 @@ export default function Login() {
     };
   
     fetchAuthenticationStatus();
+  
+    // Definindo o callback do event listener
+    const handleEvent = (event: MessageEvent) => {
+      if (event.origin !== process.env.NEXT_PUBLIC_API_URL) return; // Verificar a origem da mensagem
+  
+      // Salvar os tokens no localStorage
+      localStorage.setItem('token', event.data.token);
+      localStorage.setItem('refresh_token', event.data.refresh_token);
+    };
+  
+    if (typeof window !== 'undefined') {
+      // Event listener para receber a mensagem da janela de autenticação do Google
+      window.addEventListener('message', handleEvent);
+    }
+  
+    return () => {
+      // Limpar o event listener na desmontagem do componente
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('message', handleEvent);
+      }
+    };
   }, [router]);
   
   function submitLogin(e: FormEvent<HTMLFormElement>) {
@@ -47,17 +68,11 @@ export default function Login() {
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     console.log(googleAuthUrl);
     // Abrir a autenticação do Google em uma nova janela
-    window.open(googleAuthUrl, '_blank');
+    if (typeof window !== 'undefined') {
+      window.open(googleAuthUrl, '_blank');
+    }
   }
   
-  // Event listener para receber a mensagem da janela de autenticação do Google
-  window.addEventListener('message', event => {
-    if (event.origin !== process.env.NEXT_PUBLIC_API_URL) return; // Verificar a origem da mensagem
-  
-    // Salvar os tokens no localStorage
-    localStorage.setItem('token', event.data.token);
-    localStorage.setItem('refresh_token', event.data.refresh_token);
-  });
 
   if (loading) {
     return (
