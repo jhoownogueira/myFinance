@@ -40,34 +40,20 @@ export default function Login() {
   }
 
   function loginWithGoogle() {
+    // URL da autenticação do Google
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     console.log(googleAuthUrl);
-    
-    // Remover cookies antigos
-    document.cookie = 'token=; path=/'; 
-    document.cookie = 'refresh_token=; path=/'; 
-  
     // Redirecionar o usuário para a página de autenticação do Google
     window.location.href = googleAuthUrl;
-  
-    // Esperar um tempo adequado (por exemplo, 1 segundo) para que os cookies sejam definidos no servidor
-    setTimeout(() => {
-      // Capturar os cookies definidos no servidor
-      const token = Cookies.get('token');
-      const refreshToken = Cookies.get('refresh_token');
-      
-      // Verificar se os cookies foram definidos corretamente
-      if (token && refreshToken) {
-        // Salvar os cookies no cliente
-        document.cookie = `token=${token}; path=/;`;
-        document.cookie = `refresh_token=${refreshToken}; path=/;`;
-      } else {
-        console.error('Failed to capture cookies from server');
-      }
-    }, 1000); // Aguardar 1 segundo (ajuste esse valor conforme necessário)
+
+    // Salvar o cookie recebido do backend
+    document.cookie = 'token=; path=/'; // Limpar o cookie anterior, se houver
+    document.cookie = 'refresh_token=; path=/'; // Limpar o cookie anterior, se houver
+
+    // Adicionar os novos cookies
+    document.cookie = `token=${Cookies.get('token')}; path=/;`;
+    document.cookie = `refresh_token=${Cookies.get('refresh_token')}; path=/;`;
   }
-  
-  
 
   if (loading) {
     return (
