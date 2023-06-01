@@ -16,7 +16,11 @@ export default function Login() {
   useEffect(() => {
     const fetchAuthenticationStatus = async () => {
       try {
-        const response = await api.get('/autenticated');
+        const response = await api.get('/autenticated', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         if (response.data.authenticated) {
           setAuthenticated(true);
           router.push('/dashboard');
@@ -29,31 +33,31 @@ export default function Login() {
         setLoading(false);
       }
     };
-
+  
     fetchAuthenticationStatus();
   }, [router]);
-
-
+  
   function submitLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push('/dashboard');
   }
-
+  
   function loginWithGoogle() {
     // URL da autenticação do Google
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     console.log(googleAuthUrl);
-    // Redirecionar o usuário para a página de autenticação do Google
-    window.location.href = googleAuthUrl;
-
-    // Salvar o cookie recebido do backend
-    document.cookie = 'token=; path=/'; // Limpar o cookie anterior, se houver
-    document.cookie = 'refresh_token=; path=/'; // Limpar o cookie anterior, se houver
-
-    // Adicionar os novos cookies
-    document.cookie = `token=${Cookies.get('token')}; path=/;`;
-    document.cookie = `refresh_token=${Cookies.get('refresh_token')}; path=/;`;
+    // Abrir a autenticação do Google em uma nova janela
+    window.open(googleAuthUrl, '_blank');
   }
+  
+  // Event listener para receber a mensagem da janela de autenticação do Google
+  window.addEventListener('message', event => {
+    if (event.origin !== process.env.NEXT_PUBLIC_API_URL) return; // Verificar a origem da mensagem
+  
+    // Salvar os tokens no localStorage
+    localStorage.setItem('token', event.data.token);
+    localStorage.setItem('refresh_token', event.data.refresh_token);
+  });
 
   if (loading) {
     return (
