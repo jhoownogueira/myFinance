@@ -6,6 +6,7 @@ import { useRouter } from "next/router";
 import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { ContainerSpinner } from "@/styles/spinner/styles";
+import Cookies from 'js-cookie';
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
@@ -15,12 +16,7 @@ export default function Login() {
   useEffect(() => {
     const fetchAuthenticationStatus = async () => {
       try {
-        const token = typeof localStorage !== 'undefined' ? localStorage.getItem('token') : null;
-        const response = await api.get('/autenticated', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const response = await api.get('/autenticated');
         if (response.data.authenticated) {
           setAuthenticated(true);
           router.push('/dashboard');
@@ -33,46 +29,24 @@ export default function Login() {
         setLoading(false);
       }
     };
-  
+
     fetchAuthenticationStatus();
-  
-    // Definindo o callback do event listener
-    const handleEvent = (event: MessageEvent) => {
-      if (event.origin !== process.env.NEXT_PUBLIC_API_URL) return; // Verificar a origem da mensagem
-  
-      // Salvar os tokens no localStorage
-      localStorage.setItem('token', event.data.token);
-      localStorage.setItem('refresh_token', event.data.refresh_token);
-    };
-  
-    if (typeof window !== 'undefined') {
-      // Event listener para receber a mensagem da janela de autenticação do Google
-      window.addEventListener('message', handleEvent);
-    }
-  
-    return () => {
-      // Limpar o event listener na desmontagem do componente
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('message', handleEvent);
-      }
-    };
   }, [router]);
-  
+
+
   function submitLogin(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     router.push('/dashboard');
   }
-  
+
   function loginWithGoogle() {
     // URL da autenticação do Google
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     console.log(googleAuthUrl);
-    // Abrir a autenticação do Google em uma nova janela
-    if (typeof window !== 'undefined') {
-      window.open(googleAuthUrl, '_blank');
-    }
+    
+    // Redirecionar o usuário para a página de autenticação do Google
+    window.location.href = googleAuthUrl;
   }
-  
 
   if (loading) {
     return (
