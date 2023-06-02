@@ -43,16 +43,9 @@ export default function Login() {
     // URL da autenticação do Google
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
     console.log(googleAuthUrl);
+    
     // Redirecionar o usuário para a página de autenticação do Google
     window.location.href = googleAuthUrl;
-
-    // Salvar o cookie recebido do backend
-    document.cookie = 'token=; path=/'; // Limpar o cookie anterior, se houver
-    document.cookie = 'refresh_token=; path=/'; // Limpar o cookie anterior, se houver
-
-    // Adicionar os novos cookies
-    document.cookie = `token=${Cookies.get('token')}; path=/;`;
-    document.cookie = `refresh_token=${Cookies.get('refresh_token')}; path=/;`;
   }
 
   if (loading) {
