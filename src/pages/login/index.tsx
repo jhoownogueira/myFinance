@@ -7,6 +7,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { ContainerSpinner } from "@/styles/spinner/styles";
 import Cookies from 'js-cookie';
+import axios from "axios";
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
@@ -40,13 +41,39 @@ export default function Login() {
   }
 
   function loginWithGoogle() {
-    // URL da autenticação do Google
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-    console.log(googleAuthUrl);
-    
-    // Redirecionar o usuário para a página de autenticação do Google
-    window.location.href = googleAuthUrl;
+  
+    const popupWindow = window.open(googleAuthUrl, '_blank');
+  
+    const intervalId = setInterval(async () => {
+      if (popupWindow && popupWindow.closed) {
+        clearInterval(intervalId);
+  
+        const url = popupWindow.location ? new URL(popupWindow.location.toString()) : null;
+        const authorizationCode = url ? url.searchParams.get('authorizationCode') : null;
+  
+        if (authorizationCode) {
+          try {
+            // Request tokens from your backend using the authorization code
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/tokens`, {
+              authorizationCode
+            });
+  
+            const data = response.data;
+            if (data.token && data.refresh_token) {
+              Cookies.set('token', data.token);
+              Cookies.set('refresh_token', data.refresh_token);
+              // Redirect to the dashboard or reload the page to reflect the new authentication status
+              router.push('/dashboard');
+            }
+          } catch (error) {
+            console.error('Failed to exchange authorization code for tokens', error);
+          }
+        }
+      }
+    }, 1000);
   }
+  
 
   if (loading) {
     return (
