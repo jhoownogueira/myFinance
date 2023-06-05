@@ -7,7 +7,6 @@ import { FormEvent, useEffect, useState } from "react";
 import { api } from "@/services/api";
 import { ContainerSpinner } from "@/styles/spinner/styles";
 import Cookies from 'js-cookie';
-import axios from "axios";
 
 export default function Login() {
   const [loading, setLoading] = useState(true);
@@ -15,12 +14,12 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    const refreshToken = Cookies.get('refresh_token');
+  //  const token = Cookies.get('token');
+ //   const refresh_token = Cookies.get('refresh_token');
     const fetchAuthenticationStatus = async () => {
       try {
-      //  const response = await api.get('/autenticated');
-      const response = await api.post('/authenticated', { token, refreshToken });
+      const response = await api.get('/authenticated');
+   //   const response = await api.post('/authenticated', { token, refresh_token });
         if (response.data.authenticated) {
           setAuthenticated(true);
           router.push('/dashboard');
@@ -50,7 +49,7 @@ export default function Login() {
 
     window.addEventListener('message', (event) => {
       // Verifique se a origem do evento é confiável
-      if (event.origin !== 'https://api-my-finance.herokuapp.com') {
+      if (event.origin !== process.env.NEXT_PUBLIC_API_URL) {
         return;
       }
       const token = event.data.token;

@@ -103,7 +103,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchAuthenticationStatus = async () => {
       try {
-        const response = await api.get('/autenticated');
+        const response = await api.get('/authenticated');
         const { authenticated, user } = response.data;
         if (authenticated) {
           setUser(user);
