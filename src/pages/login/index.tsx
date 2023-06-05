@@ -14,13 +14,12 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-  //  const token = Cookies.get('token');
- //   const refresh_token = Cookies.get('refresh_token');
+   const token = Cookies.get('token');
+   const refresh_token = Cookies.get('refresh_token');
     const fetchAuthenticationStatus = async () => {
       try {
-      const response = await api.get('/authenticated');
-      console.log(response.headers)
-   //   const response = await api.post('/authenticated', { token, refresh_token });
+   //   const response = await api.get('/authenticated');
+     const response = await api.post('/authenticated', { token, refresh_token });
         if (response.data.authenticated) {
           setAuthenticated(true);
           router.push('/dashboard');

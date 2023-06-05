@@ -8,8 +8,8 @@ import { Listbox } from '@headlessui/react'
 import { CaretLeft, CheckFat, Clock, DotsThree, Eraser, PencilSimple, Receipt, Wallet, X } from "@phosphor-icons/react";
 import Modal from "react-modal";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import * as ToggleGroup from '@radix-ui/react-toggle-group';
 import { ContainerSpinner } from "@/styles/spinner/styles";
+import Cookies from 'js-cookie';
 
 interface UserProps {
   id: number;
@@ -101,9 +101,12 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    const token = Cookies.get('token');
+    const refresh_token = Cookies.get('refresh_token');
     const fetchAuthenticationStatus = async () => {
       try {
-        const response = await api.get('/authenticated');
+      //  const response = await api.get('/authenticated');
+      const response = await api.post('/authenticated', { token, refresh_token });
         const { authenticated, user } = response.data;
         if (authenticated) {
           setUser(user);
