@@ -50,14 +50,8 @@ export default function Login() {
       if (event.origin !== 'https://api-my-finance.herokuapp.com') {
         return;
       }
-
-      console.log('Received event', event);
-      console.log('Event data', event.data);
-      console.log('Token', event.data.token);
-      console.log('Refresh token', event.data.refreshToken);
-
       const token = event.data.token;
-      const refreshToken = event.data.refreshToken;
+      const refreshToken = event.data.refresh_token;
       if (token && refreshToken) {
         Cookies.set('token', token);
         Cookies.set('refresh_token', refreshToken);
