@@ -15,9 +15,12 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
+    const token = Cookies.get('token');
+    const refreshToken = Cookies.get('refresh_token');
     const fetchAuthenticationStatus = async () => {
       try {
-        const response = await api.get('/autenticated');
+      //  const response = await api.get('/autenticated');
+      const response = await api.post('/authenticated', { token, refreshToken });
         if (response.data.authenticated) {
           setAuthenticated(true);
           router.push('/dashboard');
