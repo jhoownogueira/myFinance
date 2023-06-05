@@ -48,7 +48,7 @@ export default function Login() {
     window.addEventListener('message', (event) => {
       console.log('Received event', event);
       // Verifique se a origem do evento é confiável
-      if (event.origin !== process.env.NEXT_PUBLIC_API_URL) {
+      if (event.origin !== 'https://api-my-finance.herokuapp.com') {
         return;
       }
   
