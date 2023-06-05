@@ -46,6 +46,7 @@ export default function Login() {
     const popupWindow = window.open(googleAuthUrl, '_blank');
   
     window.addEventListener('message', (event) => {
+      console.log('Received event', event);
       // Verifique se a origem do evento é confiável
       if (event.origin !== process.env.NEXT_PUBLIC_API_URL) {
         return;
@@ -55,6 +56,7 @@ export default function Login() {
       if (token && refreshToken) {
         Cookies.set('token', token);
         Cookies.set('refresh_token', refreshToken);
+        console.log('Cookies', Cookies.get('token'), Cookies.get('refresh_token'));
         router.push('/dashboard');
       }
     }, false);
