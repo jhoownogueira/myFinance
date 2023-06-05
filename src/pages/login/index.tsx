@@ -45,34 +45,21 @@ export default function Login() {
   
     const popupWindow = window.open(googleAuthUrl, '_blank');
   
-    const intervalId = setInterval(async () => {
-      if (popupWindow && popupWindow.closed) {
-        clearInterval(intervalId);
-  
-        const url = popupWindow.location ? new URL(popupWindow.location.toString()) : null;
-        const authorizationCode = url ? url.searchParams.get('authorizationCode') : null;
-  
-        if (authorizationCode) {
-          try {
-            // Request tokens from your backend using the authorization code
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/google/tokens`, {
-              authorizationCode
-            });
-  
-            const data = response.data;
-            if (data.token && data.refresh_token) {
-              Cookies.set('token', data.token);
-              Cookies.set('refresh_token', data.refresh_token);
-              // Redirect to the dashboard or reload the page to reflect the new authentication status
-              router.push('/dashboard');
-            }
-          } catch (error) {
-            console.error('Failed to exchange authorization code for tokens', error);
-          }
-        }
+    window.addEventListener('message', (event) => {
+      // Verifique se a origem do evento é confiável
+      if (event.origin !== process.env.NEXT_PUBLIC_API_URL) {
+        return;
       }
-    }, 1000);
+  
+      const { token, refreshToken } = event.data;
+      if (token && refreshToken) {
+        Cookies.set('token', token);
+        Cookies.set('refresh_token', refreshToken);
+        router.push('/dashboard');
+      }
+    }, false);
   }
+  
   
 
   if (loading) {
