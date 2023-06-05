@@ -19,6 +19,7 @@ export default function Login() {
     const fetchAuthenticationStatus = async () => {
       try {
       const response = await api.get('/authenticated');
+      console.log(response.headers)
    //   const response = await api.post('/authenticated', { token, refresh_token });
         if (response.data.authenticated) {
           setAuthenticated(true);
