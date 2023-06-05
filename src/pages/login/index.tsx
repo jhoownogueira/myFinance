@@ -14,9 +14,12 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
+   const token = Cookies.get('token');
+   const refresh_token = Cookies.get('refresh_token');
     const fetchAuthenticationStatus = async () => {
       try {
-        const response = await api.get('/autenticated');
+   //   const response = await api.get('/authenticated');
+     const response = await api.post('/authenticated', { token, refresh_token });
         if (response.data.authenticated) {
           setAuthenticated(true);
           router.push('/dashboard');
@@ -40,13 +43,27 @@ export default function Login() {
   }
 
   function loginWithGoogle() {
-    // URL da autenticação do Google
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-    console.log(googleAuthUrl);
-    
-    // Redirecionar o usuário para a página de autenticação do Google
-    window.location.href = googleAuthUrl;
+
+    const popupWindow = window.open(googleAuthUrl, '_blank');
+
+    window.addEventListener('message', (event) => {
+      // Verifique se a origem do evento é confiável
+      if (event.origin !== process.env.NEXT_PUBLIC_API_URL) {
+        return;
+      }
+      const token = event.data.token;
+      const refreshToken = event.data.refresh_token;
+      if (token && refreshToken) {
+        Cookies.set('token', token);
+        Cookies.set('refresh_token', refreshToken);
+        console.log('Cookies', Cookies.get('token'), Cookies.get('refresh_token'));
+        router.push('/dashboard');
+      }
+    }, false);
   }
+
+
 
   if (loading) {
     return (
