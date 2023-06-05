@@ -42,17 +42,22 @@ export default function Login() {
 
   function loginWithGoogle() {
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-  
+
     const popupWindow = window.open(googleAuthUrl, '_blank');
-  
+
     window.addEventListener('message', (event) => {
-      console.log('Received event', event);
       // Verifique se a origem do evento é confiável
       if (event.origin !== 'https://api-my-finance.herokuapp.com') {
         return;
       }
-  
-      const { token, refreshToken } = event.data;
+
+      console.log('Received event', event);
+      console.log('Event data', event.data);
+      console.log('Token', event.data.token);
+      console.log('Refresh token', event.data.refreshToken);
+
+      const token = event.data.token;
+      const refreshToken = event.data.refreshToken;
       if (token && refreshToken) {
         Cookies.set('token', token);
         Cookies.set('refresh_token', refreshToken);
@@ -61,8 +66,8 @@ export default function Login() {
       }
     }, false);
   }
-  
-  
+
+
 
   if (loading) {
     return (
