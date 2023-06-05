@@ -14,12 +14,12 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-   const token = Cookies.get('token');
-   const refresh_token = Cookies.get('refresh_token');
+    const token = Cookies.get('token');
+    const refresh_token = Cookies.get('refresh_token');
     const fetchAuthenticationStatus = async () => {
       try {
-   //   const response = await api.get('/authenticated');
-     const response = await api.post('/authenticated', { token, refresh_token });
+        //   const response = await api.get('/authenticated');
+        const response = await api.post('/authenticated', { token, refresh_token });
         if (response.data.authenticated) {
           setAuthenticated(true);
           router.push('/dashboard');
@@ -55,9 +55,13 @@ export default function Login() {
       const token = event.data.token;
       const refreshToken = event.data.refresh_token;
       if (token && refreshToken) {
-        Cookies.set('token', token);
-        Cookies.set('refresh_token', refreshToken);
-        console.log('Cookies', Cookies.get('token'), Cookies.get('refresh_token'));
+        const expirationHour = 5; // (5:00 AM)
+        const expirationDate = new Date();
+        expirationDate.setDate(expirationDate.getDate() + 7); // 7 days from now
+        expirationDate.setHours(expirationHour, 0, 0, 0);
+
+        Cookies.set('token', token, { expires: expirationDate });
+        Cookies.set('refresh_token', refreshToken, { expires: expirationDate });
         router.push('/dashboard');
       }
     }, false);
