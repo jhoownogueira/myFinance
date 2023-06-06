@@ -11,7 +11,6 @@ import { AuthContext } from "@/context/authContext";
 export default function Login() {
   const { loading, setLoading, refreshUser } = useContext(AuthContext)
   const router = useRouter();
-  setLoading(true);
   function loginWithGoogle() {
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
 
@@ -36,6 +35,11 @@ export default function Login() {
       }
     }, false);
   }
+
+  useEffect(() => {
+    setLoading(true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     refreshUser().then((isUserAuthenticated) => {
