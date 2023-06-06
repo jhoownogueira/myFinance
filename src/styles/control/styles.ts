@@ -424,7 +424,6 @@ export const ControleContainer = styled.section`
   }
 
   @media (max-width: 900px) {
-
     section.transactions-content {
       .card {
           .icon {
@@ -445,6 +444,58 @@ export const ControleContainer = styled.section`
         }
       }
     }
+  }
+
+  @media (max-width: 480px) {
+    height: auto;
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        height: auto;
+
+        .left-content {
+          flex-direction: column-reverse;
+          align-items: flex-start;
+
+          .picture-content {
+            display: none;
+          }
+
+          .styled-select-options {
+            top: 70px;
+            left: 0;
+          }
+        }
+
+        button.new-release {
+          width: 100%;
+        }
+    }
+
+    section.transactions-content {
+      flex-direction: column;
+      .card {
+          .icon {
+            display: flex;
+          }
+      }
+    }
+
+    section.table-container {
+      table {
+        th:nth-child(1),
+        td:nth-child(1) {
+          display: none;
+        }
+
+        th:nth-child(6),
+        td:nth-child(6) {
+          display: none;
+        }
+      }
+    }
+
   }
 `;
 
