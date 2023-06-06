@@ -3,44 +3,14 @@ import { LoginContainer } from "@/styles/login/styles";
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from "next/router";
-import { FormEvent, useEffect, useState } from "react";
-import { api } from "@/services/api";
+import { useContext, useEffect } from "react";
 import { ContainerSpinner } from "@/styles/spinner/styles";
 import Cookies from 'js-cookie';
+import { AuthContext } from "@/context/authContext";
 
 export default function Login() {
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  const { loading, setLoading, refreshUser } = useContext(AuthContext)
   const router = useRouter();
-
-  useEffect(() => {
-    const token = Cookies.get('token');
-    const refresh_token = Cookies.get('refresh_token');
-    const fetchAuthenticationStatus = async () => {
-      try {
-        //   const response = await api.get('/authenticated');
-        const response = await api.post('/authenticated', { token, refresh_token });
-        if (response.data.authenticated) {
-          setAuthenticated(true);
-          router.push('/dashboard');
-        } else {
-          alert('Por favor, insira suas credenciais.');
-          setLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-        setLoading(false);
-      }
-    };
-
-    fetchAuthenticationStatus();
-  }, [router]);
-
-
-  function submitLogin(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    router.push('/dashboard');
-  }
 
   function loginWithGoogle() {
     const googleAuthUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
@@ -67,8 +37,21 @@ export default function Login() {
     }, false);
   }
 
+  useEffect(() => {
+    refreshUser().then((isUserAuthenticated) => {
 
+      if (isUserAuthenticated) {
+        setLoading(true);
+        router.push('/dashboard');
+      } else {
+        setLoading(false);
+      }
+    });
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  
   if (loading) {
     return (
       <>
@@ -93,23 +76,27 @@ export default function Login() {
           className='logo'
           src='/images/logo_medium.svg'
           alt='logo myFinance'
-          width={58.98}
-          height={90.44}
+          width={128}
+          height={128}
         />
         <main>
-          <h1>Acessar</h1>
-          <span>Digite o seu usuário e senha</span>
-          <form onSubmit={submitLogin}>
-            <div className="inputs">
-              <input type="text" placeholder="Usuário" />
-              <input type="password" placeholder="Senha" />
-            </div>
-            <div className="separation">
-              <span>Ou continue com</span>
-              <div className="hr"></div>
-            </div>
-            <button type="button" className="google" onClick={loginWithGoogle}>Login With Google</button>
-            <button type="submit">Entrar</button>
+          <h1>Login</h1>
+          <span>Entre com a sua conta do Google.</span>
+          <form>
+            <button
+              type="button"
+              className="google"
+              onClick={loginWithGoogle}>
+              <div className="google-logo">
+                <Image
+                  src='/icons/google.svg'
+                  alt='logo google'
+                  width={30}
+                  height={30}
+                />
+              </div>
+              Fazer login com o Google
+            </button>
           </form>
         </main>
       </LoginContainer>
