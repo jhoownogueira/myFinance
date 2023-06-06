@@ -1,23 +1,14 @@
-import { MenuHeaderLayout } from "@/layouts/menuLayout";
-import { api } from "@/services/api";
+import {MenuHeaderLayout} from "@/layouts/menuLayout";
 import { DashboardContainer, DeleteModal, DropDownMenuContent, DropDownMenuItem, EditNewTransactionModal, NewTransactionModal, PayOffModal, ToggleGroupContainer, ToggleGroupItem, TransactionModal } from "@/styles/dashboard/styles";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image"
 import { Listbox } from '@headlessui/react'
 import { CaretLeft, CheckFat, Clock, DotsThree, Eraser, PencilSimple, Receipt, Wallet, X } from "@phosphor-icons/react";
 import Modal from "react-modal";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { ContainerSpinner } from "@/styles/spinner/styles";
-import Cookies from 'js-cookie';
-
-interface UserProps {
-  id: number;
-  name: string;
-  email: string;
-  picture: string;
-  created_at: string;
-}
+import { AuthContext } from "@/context/authContext";
 
 function getCurrentYear() {
   const currentYear = new Date().getFullYear();
@@ -54,8 +45,7 @@ const monthCurrentYear = [
 
 export default function Dashboard() {
   const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState<UserProps>();
+  const { user, loading, setLoading, refreshUser } = useContext(AuthContext)
   const [newTransacitonModalIsOpen, setNewTransacitonModalIsOpen] = useState(false);
   const [editNewTransacitonModalIsOpen, setEditNewTransacitonModalIsOpen] = useState(false);
   const [transactionModalIsOpen, setTransactionModalIsOpen] = useState(false);
@@ -101,28 +91,18 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    const token = Cookies.get('token');
-    const refresh_token = Cookies.get('refresh_token');
-    const fetchAuthenticationStatus = async () => {
-      try {
-      //  const response = await api.get('/authenticated');
-      const response = await api.post('/authenticated', { token, refresh_token });
-        const { authenticated, user } = response.data;
-        if (authenticated) {
-          setUser(user);
-          setLoading(false);
-        } else {
-          router.push('/login');
-          setLoading(false);
-        }
-      } catch (error) {
-        router.push('/login');
-        console.log(error);
+    refreshUser().then((isUserAuthenticated) => {
+      
+      if (isUserAuthenticated) {
+        setLoading(false);
+      } else {
+        setLoading(true);
+      router.push('/login');
       }
-    };
+    });
 
-    fetchAuthenticationStatus();
-  }, [router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
 
   if (loading) {

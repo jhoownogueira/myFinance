@@ -1,18 +1,21 @@
-import React, { createContext, ReactNode, useEffect, useState } from 'react';
+import React, { createContext, ReactNode, useEffect, useState, Dispatch, SetStateAction } from 'react';
 import { api } from "@/services/api";
+import Cookies from 'js-cookie';
+import router from 'next/router';
 
 interface userProps {
-  id: string
-  google_id?: string
-  email: string
-  password?: string
-  name: string
-  picture?: string
-  refresh_token?: string
+  id: number;
+  name: string;
+  email: string;
+  picture: string;
+  created_at: string;
 }
 
 interface IUserContextProps {
-  user: userProps[];
+  user: userProps | undefined;
+  loading: boolean;
+  setLoading: Dispatch<SetStateAction<boolean>>;
+  refreshUser: () => Promise<boolean>;
 }
 
 interface AuthProvider {
@@ -22,31 +25,40 @@ interface AuthProvider {
 export const AuthContext = createContext({} as IUserContextProps);
 
 export const AuthContextProvider = ({ children }: AuthProvider) => {
+  const token = Cookies.get('token');
+  const refresh_token = Cookies.get('refresh_token');
+  const [user, setUser] = useState<userProps>()
+  const [loading, setLoading] = useState(true);
 
-  const [user, setUser] = useState<userProps[]>([])
+  const refreshUser = async () => {
+    try {
+      const response = await api.post('/authenticated', { token, refresh_token });
+      const { authenticated, user } = response.data;
 
-  useEffect(() => {
-    setUser([{
-      id: "178",
-      google_id: "asdasdasdw3q",
-      email: "jhoownogueira@outlook.com",
-      password: "uasaushaushu",
-      name: "Jhonata Nogueira",
-      picture: "suahsuashu",
-      refresh_token: "asdaosdkasod"
-    }])
-  }, [])
+      console.log(response.data);
 
-  // useEffect(() => {
-  //     api.get('/pokemon?limit=21&offset=0').then(response => {
-  //         setPokemonsList(response.data.results)
-  //     })
-  // }, [])
+      if (authenticated) {
+        setUser(user);
+        setLoading(false);
+        return true;
+      } else {
+        setLoading(false);
+        return false;
+      }
+    } catch (error) {
+      console.error(error);
+      return false;
+    }
+  }
+
 
   return (
     <AuthContext.Provider
       value={{
-        user
+        user,
+        loading,
+        setLoading,
+        refreshUser
       }}
     >
       {children}

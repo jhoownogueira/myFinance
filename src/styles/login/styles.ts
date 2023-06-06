@@ -1,4 +1,25 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+
+const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;
+
+const translactionUpforDown = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+`
 
 export const LoginContainer = styled.section`
   width: 100%;
@@ -8,6 +29,11 @@ export const LoginContainer = styled.section`
   align-items: center;
   justify-content: center;
   gap: 2rem;
+  padding-bottom: 8rem;
+
+  .logo {
+    animation: ${translactionUpforDown} 1s ease-in-out;
+  }
 
   main {
     width: 100%;
@@ -20,12 +46,14 @@ export const LoginContainer = styled.section`
     background: ${props => props.theme.bg};
     border: 1px solid ${props => props.theme.hr};
     border-radius: 24px;
+    animation: ${fadeIn} 1s ease-in-out;
 
     h1 {
       font-size: 1.5rem;
       font-weight: 700;
       text-align: center;
       color: ${props => props.theme["text-white"]};
+      margin-bottom: 0.5rem;
     }
 
     span {
@@ -37,58 +65,10 @@ export const LoginContainer = styled.section`
 
     form {
       width: 100%;
-
-      .inputs {
-      width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin: 2rem 0;
-
-      input {
-        width: 100%;
-        height: 3rem;
-        border: 1px solid ${props => props.theme.hr};
-        outline: none;
-        border-radius: 12px;
-        padding: 0.5rem 1rem;
-        color: ${props => props.theme["text-white"]};
-        background: ${props => props.theme.black};
-        transition: all 0.2s;
-
-        &::placeholder {
-          color: ${props => props.theme["text-gray"]};
-        }
-
-        &:focus {
-          border: 1px solid ${props => props.theme.primary};
-        }
-      }
-    }
-
-    .separation {
-        width: 100%;
-        display: flex;
-        gap: 0.25rem;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 2rem;
-
-        span {
-          display: block;
-          min-width: fit-content;
-          font-size: 0.75rem;
-          color: ${props => props.theme.primary};
-        }
-
-        .hr {
-          width: 100%;
-          height: 1px;
-          background: ${props => props.theme.hr};
-        }
-      }
+      margin-top: 2.5rem;
 
       button {
         width: 100%;
@@ -101,9 +81,34 @@ export const LoginContainer = styled.section`
       }
 
       button.google {
-        background: white;
-        color: black;
+        max-width: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 1rem;
+        border-radius: 999px;
+        border: 1px solid transparent;
+        font-size: 0.875rem;
+        padding: 0 0.15rem;
+        background: ${props => props.theme["black-soft"]};
+        color: white;
         margin-bottom: 1.5rem;
+        transition: all 0.2s ease-in-out;
+        
+        .google-logo {
+          width: 2.625rem;
+          height: 2.625rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          background: ${props => props.theme["text-white"]};
+        }
+
+        &:hover {
+          border: 1px solid ${props => props.theme.hr};
+        }
+
       }
     }
   }
