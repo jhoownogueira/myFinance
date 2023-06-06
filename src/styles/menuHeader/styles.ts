@@ -104,7 +104,7 @@ export const MenuHeaderContainer = styled.header`
     left: 0;
 
     ul {
-      width: 35%;
+      width: 50%;
       display: flex;
       flex-direction: column;
       gap: 1rem;
