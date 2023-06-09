@@ -70,15 +70,15 @@ export function MenuHeaderLayout({ children }: { children: React.ReactNode }) {
             </li>
             <li>
               <Link
-                href="/"
-                className={router.pathname == "/receives" ? "activeLink" : ""}
+                href="/receipts"
+                className={router.pathname == "/receipts" ? "activeLink" : ""}
               >
                 Recebimentos
               </Link>
             </li>
             <li>
               <Link
-                href="/"
+                href="/wallets"
                 className={router.pathname == "/wallets" ? "activeLink" : ""}
               >
                 Carteiras
@@ -203,8 +203,8 @@ export function MenuHeaderLayout({ children }: { children: React.ReactNode }) {
             <li>
               <Link
               onClick={toogleMenu}
-                href="/"
-                className={router.pathname == "/receives" ? "activeLink" : ""}
+                href="/receipts"
+                className={router.pathname == "/receipts" ? "activeLink" : ""}
               >
                 Recebimentos
               </Link>
@@ -212,7 +212,7 @@ export function MenuHeaderLayout({ children }: { children: React.ReactNode }) {
             <li>
               <Link
               onClick={toogleMenu}
-                href="/"
+                href="/wallets"
                 className={router.pathname == "/wallets" ? "activeLink" : ""}
               >
                 Carteiras

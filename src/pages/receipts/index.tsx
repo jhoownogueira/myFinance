@@ -2,7 +2,7 @@ import { MenuHeaderLayout } from "@/layouts/menuLayout";
 import {
   PaymentContainer,
   TransactionModal,
-} from "@/styles/payments/styles";
+} from "@/styles/receipts/styles";
 import { useRouter } from "next/router";
 import { useContext, useEffect, useState } from "react";
 import { Listbox } from "@headlessui/react";
@@ -45,7 +45,7 @@ const monthCurrentYear = [
   { id: 12, title: "Dezembro", ano: year },
 ];
 
-export default function Payments() {
+export default function Receipts() {
   const router = useRouter();
   const { loading, setLoading, refreshUser } = useContext(AuthContext);
   const [transactionModalIsOpen, setTransactionModalIsOpen] = useState(false);
@@ -131,7 +131,7 @@ export default function Payments() {
               <Wallet size={24} />
             </div>
             <div className="info">
-              <span>Efetuados</span>
+              <span>Recebidos</span>
               <p>- R$4.500,00</p>
             </div>
           </article>
@@ -272,4 +272,4 @@ export default function Payments() {
   );
 }
 
-Payments.PageLayout = MenuHeaderLayout;
+Receipts.PageLayout = MenuHeaderLayout;

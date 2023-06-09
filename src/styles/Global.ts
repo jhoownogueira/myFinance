@@ -115,7 +115,7 @@ export const GlobalStyles = createGlobalStyle`
     label {
       width: 100%;
       font-size: 0.875rem;
-      color: ${(props) => props.theme["gray-soft"]};
+      color: ${(props) => props.theme["primary"]};
     }
 
     input {
