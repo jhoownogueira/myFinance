@@ -16,6 +16,8 @@ import { useContext, useEffect, useState } from "react";
 import { Listbox } from "@headlessui/react";
 import {
   CaretLeft,
+  CaretUp,
+  Check,
   CheckFat,
   Clock,
   Coins,
@@ -138,7 +140,7 @@ export default function Dashboard() {
         <header>
           <div className="left-content">
             <div className="picture-content">
-            <Coins size={24} weight="fill" />
+              <Coins size={24} weight="fill" />
             </div>
             <Listbox value={selectedWallet} onChange={setSelectedWallet}>
               <Listbox.Button className="styled-select-button">
@@ -153,7 +155,9 @@ export default function Dashboard() {
                 ))}
               </Listbox.Options>
             </Listbox>
-            <span><strong>Saldo: </strong>R$1.500,00</span>
+            <span>
+              <strong>Saldo: </strong>R$1.500,00
+            </span>
           </div>
           <button
             className="new-release"
@@ -187,7 +191,7 @@ export default function Dashboard() {
             </div>
             <div className="info">
               <span>Pagamentos</span>
-              <p style={{color: '#EA3D4A'}}>- R$4.500,00</p>
+              <p style={{ color: "#EA3D4A" }}>- R$4.500,00</p>
             </div>
           </article>
           <article className="card">
@@ -196,7 +200,7 @@ export default function Dashboard() {
             </div>
             <div className="info">
               <span>Recebimentos</span>
-              <p style={{color: '#4AB444'}}> R$1.200,00</p>
+              <p style={{ color: "#4AB444" }}> R$1.200,00</p>
             </div>
           </article>
           <article className="card">
@@ -205,7 +209,7 @@ export default function Dashboard() {
             </div>
             <div className="info">
               <span>Pendentes</span>
-              <p style={{color: '#6C7787'}}>- R$2.521,27</p>
+              <p style={{ color: "#6C7787" }}>- R$2.521,27</p>
             </div>
           </article>
         </section>
@@ -520,13 +524,12 @@ export default function Dashboard() {
       >
         <TransactionModal>
           <header>
-            <h2>Mais informações</h2>
             <button onClick={handleTransactionModalClose}>
               <X size={24} />
             </button>
           </header>
-          <form>
-            <fieldset className="input-global">
+          <main>
+            <fieldset className="input-visualizar">
               <label>Descrição</label>
               <input
                 type="text"
@@ -535,64 +538,57 @@ export default function Dashboard() {
                 readOnly
               />
             </fieldset>
-            <fieldset className="input-global">
+            <fieldset className="input-visualizar">
               <label>Categoria</label>
               <input type="text" name="category" value="Kiara" readOnly />
             </fieldset>
             <div className="fieldset-flex">
-              <fieldset className="input-global">
+              <fieldset className="input-visualizar">
                 <label>Valor</label>
                 <input type="text" name="amount" value="R$158,00" readOnly />
               </fieldset>
-              <fieldset className="input-global">
-                <label>Parcelas restantes</label>
-                <input type="text" name="parcelsMissing" value="00" readOnly />
+              <fieldset className="input-visualizar">
+                <label>Parcela</label>
+                <input type="text" name="parcelsMissing" value="2/5" readOnly />
               </fieldset>
             </div>
             <div className="fieldset-flex">
-              <fieldset className="input-global">
-                <label>Data</label>
-                <input type="text" name="date" value="31/05/2023" readOnly />
-              </fieldset>
-              <fieldset className="input-global">
-                <label>Hora</label>
-                <input type="text" name="hour" value="10:51:32" readOnly />
-              </fieldset>
-            </div>
-            <div className="fieldset-flex">
-              <fieldset className="input-global">
-                <label>Lançado por</label>
+              <fieldset className="input-visualizar input-with-icon">
+                <label>Lançado</label>
                 <input
                   type="text"
-                  name="releasedBy"
+                  name="date"
+                  value="31/05/2023 10:31:51"
+                  readOnly
+                />
+                <Clock size={24} />
+              </fieldset>
+              <fieldset className="input-visualizar">
+                <label>Por</label>
+                <input
+                  type="text"
+                  name="hour"
                   value="Jhonata Nogueira"
                   readOnly
                 />
               </fieldset>
-              <fieldset className="input-global">
-                <label>Carteira</label>
-                <input
-                  type="text"
-                  name="hour"
-                  value="Carteira Jhonata"
-                  readOnly
-                />
-              </fieldset>
             </div>
             <div className="fieldset-flex">
-              <fieldset className="input-type">
+              <fieldset className="input-visualizar input-with-icon income">
                 <label>Tipo</label>
-                <span>Receita</span>
+                <input type="text" name="income" value="Receita" readOnly />
+                <CaretUp size={24} weight="fill" />
               </fieldset>
-              <fieldset className="input-status">
+              <fieldset className="input-visualizar input-with-icon check">
                 <label>Status</label>
-                <span>Recebido</span>
+                <input type="text" name="cost" value="Recebido" readOnly />
+                <Check size={24} />
               </fieldset>
             </div>
-            <button type="button" onClick={handleTransactionModalClose}>
-              Voltar
-            </button>
-          </form>
+          </main>
+          <button className="footer" type="button" onClick={handleTransactionModalClose}>
+            Voltar
+          </button>
         </TransactionModal>
       </Modal>
 
