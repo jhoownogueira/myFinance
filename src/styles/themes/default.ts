@@ -14,6 +14,7 @@ export const defaultTheme = {
   'gray': '#464646',
   'gray-soft': '#BDBDBD',
 
-  'status-green': '#257D7B',
+  'status-green': '#4AB444',
+  'status-red': '#BC1421',
   'status-yellow': '#F9B83F',
 };

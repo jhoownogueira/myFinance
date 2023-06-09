@@ -88,6 +88,7 @@ export const GlobalStyles = createGlobalStyle`
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
     border: 1px solid ${(props) => props.theme["hr"]};
     padding: 1rem 3rem 3rem;
+    margin: 0 1rem;
     position: relative;
     border-radius: 12px;
   }
@@ -114,7 +115,7 @@ export const GlobalStyles = createGlobalStyle`
     label {
       width: 100%;
       font-size: 0.875rem;
-      color: ${(props) => props.theme["gray-soft"]};
+      color: ${(props) => props.theme["primary"]};
     }
 
     input {
@@ -144,6 +145,12 @@ export const GlobalStyles = createGlobalStyle`
     align-items: end;
     gap: 0.5rem;
     justify-content: space-between;
+  }
+
+  @media(max-width:480px) {
+    .fieldset-flex {
+      flex-direction: column;
+    }
   }
 
 `;

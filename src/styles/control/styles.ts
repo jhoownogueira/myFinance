@@ -426,9 +426,9 @@ export const ControleContainer = styled.section`
   @media (max-width: 900px) {
     section.transactions-content {
       .card {
-          .icon {
-            display: none;
-          }
+        .icon {
+          display: none;
+        }
       }
     }
 
@@ -449,36 +449,36 @@ export const ControleContainer = styled.section`
   @media (max-width: 480px) {
     height: auto;
     header {
-        flex-direction: column;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      height: auto;
+
+      .left-content {
+        flex-direction: column-reverse;
         align-items: flex-start;
-        gap: 1rem;
-        height: auto;
 
-        .left-content {
-          flex-direction: column-reverse;
-          align-items: flex-start;
-
-          .picture-content {
-            display: none;
-          }
-
-          .styled-select-options {
-            top: 70px;
-            left: 0;
-          }
+        .picture-content {
+          display: none;
         }
 
-        button.new-release {
-          width: 100%;
+        .styled-select-options {
+          top: 70px;
+          left: 0;
         }
+      }
+
+      button.new-release {
+        width: 100%;
+      }
     }
 
     section.transactions-content {
       flex-direction: column;
       .card {
-          .icon {
-            display: flex;
-          }
+        .icon {
+          display: flex;
+        }
       }
     }
 
@@ -495,7 +495,6 @@ export const ControleContainer = styled.section`
         }
       }
     }
-
   }
 `;
 
@@ -503,7 +502,7 @@ export const NewTransactionModal = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 
   header {
     display: flex;
@@ -534,7 +533,7 @@ export const NewTransactionModal = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 
     fieldset.input-toggle {
       width: 100%;
@@ -558,7 +557,7 @@ export const NewTransactionModal = styled.div`
       }
 
       button.close {
-        width: 20%;
+        width: 9rem;
         background: transparent;
         border: 1px solid ${(props) => props.theme["hr"]};
         color: ${(props) => props.theme["hr"]};
@@ -570,7 +569,7 @@ export const NewTransactionModal = styled.div`
       }
 
       button.register {
-        width: 80%;
+        width: 100%;
         background: ${(props) => props.theme.secondary};
         border: transparent;
         color: ${(props) => props.theme["text-white"]};
@@ -586,7 +585,7 @@ export const EditNewTransactionModal = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 
   header {
     display: flex;
@@ -617,7 +616,7 @@ export const EditNewTransactionModal = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 
     fieldset.input-toggle {
       width: 100%;
@@ -641,7 +640,7 @@ export const EditNewTransactionModal = styled.div`
       }
 
       button.close-edit {
-        width: 20%;
+        width: 9rem;
         background: transparent;
         border: 1px solid ${(props) => props.theme["hr"]};
         color: ${(props) => props.theme["hr"]};
@@ -653,7 +652,7 @@ export const EditNewTransactionModal = styled.div`
       }
 
       button.save-transaction {
-        width: 80%;
+        width: 100%;
         background: ${(props) => props.theme.secondary};
         border: transparent;
         color: ${(props) => props.theme["text-white"]};
@@ -673,10 +672,10 @@ export const TransactionModal = styled.div`
 
   header {
     width: 100%;
+    height: 5rem;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 1rem 0;
+    justify-content: end;
     h2 {
       font-weight: 500;
       font-size: 1.2rem;
@@ -704,67 +703,82 @@ export const TransactionModal = styled.div`
     }
   }
 
-  form {
+  main {
     width: 100%;
     max-width: 1200px;
     display: flex;
     flex-direction: column;
     gap: 1rem;
 
-    fieldset.input-type,
-    fieldset.input-status {
+    fieldset.input-visualizar {
       width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 0.5rem;
+      border: none;
       outline: none;
-      border: 0;
-    }
+      gap: 0.375rem;
 
-    fieldset.input-type {
       label {
-        width: 100%;
         font-size: 0.875rem;
-        color: ${(props) => props.theme["gray-soft"]};
+        color: ${(props) => props.theme["primary"]};
       }
 
-      span {
-        width: 100%;
-        height: 2.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid #4ab444;
-        border-radius: 6px;
+      input {
+        font-size: 1rem;
+        height: 2.625rem;
         background: transparent;
-        color: #4ab444;
-        font-size: 1rem;
+        outline: none;
+        border: none;
+        border-bottom: 1px solid ${(props) => props.theme["hr"]};
       }
     }
 
-    fieldset.input-status {
-      label {
-        width: 100%;
-        font-size: 0.875rem;
-        color: ${(props) => props.theme["gray-soft"]};
-      }
-
-      span {
-        width: 100%;
-        height: 2.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: transparent;
-        border-radius: 6px;
-        background: #4ab444;
-        color: ${(props) => props.theme["text-white"]};
-        font-size: 1rem;
+    fieldset.input-with-icon {
+      position: relative;
+      svg {
+        position: absolute;
+        top: 2rem;
+        right: 0;
+        color: ${(props) => props.theme["primary"]};
       }
     }
 
-    button {
-      margin-top: 1rem;
+    fieldset.income,
+    fieldset.check {
+      input {
+        color: ${(props) => props.theme["status-green"]};
+      }
+
+      svg {
+        color: ${(props) => props.theme["status-green"]};
+      }
+    }
+
+    fieldset.cost {
+      input {
+        color: ${(props) => props.theme["status-red"]};
+      }
+
+      svg {
+        color: ${(props) => props.theme["status-red"]};
+      }
+    }
+
+    fieldset.uncheck {
+      input {
+        color: ${(props) => props.theme["status-yellow"]};
+      }
+
+      svg {
+        color: ${(props) => props.theme["status-yellow"]};
+      }
+    }
+
+    
+  }
+
+  button.footer {
+      margin-top: 2rem;
       width: 100%;
       max-width: 150px;
       height: 2.5rem;
@@ -783,6 +797,12 @@ export const TransactionModal = styled.div`
         background: ${(props) => props.theme["secondary"]};
         color: ${(props) => props.theme["text-white"]};
       }
+    }
+
+  @media (max-width: 480px) {
+    main {
+      max-height: 400px;
+      overflow-y: auto;
     }
   }
 `;
