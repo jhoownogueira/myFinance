@@ -35,8 +35,6 @@ export const AuthContextProvider = ({ children }: AuthProvider) => {
       const response = await api.post('/authenticated', { token, refresh_token });
       const { authenticated, user } = response.data;
 
-      console.log(response.data);
-
       if (authenticated) {
         setUser(user);
         setLoading(false);

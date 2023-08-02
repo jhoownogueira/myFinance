@@ -33,13 +33,25 @@ import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { ContainerSpinner } from "@/styles/spinner/styles";
 import { AuthContext } from "@/context/authContext";
 import { getCurrentMonth, getCurrentYear } from "@/utils/getYearsAndMonth";
+import { api } from "@/services/api";
 
-const wallets = [
-  { id: 1, title: "Carteira Jhonata" },
-  { id: 2, title: "Carteira Familia" },
-  { id: 3, title: "Carteira Poupança" },
-  { id: 4, title: "Carteira Kiara" },
-];
+interface WalletProps {
+  id: number;
+  name: string;
+  shared: boolean;
+  created_at: string;
+  amount: number;
+  owner: {
+    id: number;
+    name: string;
+  };
+  users: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
+}
 
 const currentMonth = getCurrentMonth();
 const year = getCurrentYear();
@@ -60,7 +72,11 @@ const monthCurrentYear = [
 
 export default function Dashboard() {
   const router = useRouter();
-  const { loading, setLoading, refreshUser } = useContext(AuthContext);
+  const [loading, setLoading] = useState(true);
+  const { refreshUser, user } = useContext(AuthContext);
+  const [wallets, setWallets] = useState<WalletProps[]>([]);
+  const [selectedWallet, setSelectedWallet] = useState<WalletProps>(wallets[0]);
+
   const [newTransacitonModalIsOpen, setNewTransacitonModalIsOpen] =
     useState(false);
   const [editNewTransacitonModalIsOpen, setEditNewTransacitonModalIsOpen] =
@@ -68,7 +84,7 @@ export default function Dashboard() {
   const [transactionModalIsOpen, setTransactionModalIsOpen] = useState(false);
   const [payOffModalIsOpen, setPayOffModalIsOpen] = useState(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState(false);
-  const [selectedWallet, setSelectedWallet] = useState(wallets[0]);
+  
   const startMonth = monthCurrentYear.find(
     (month) => month.id === currentMonth
   );
@@ -111,10 +127,29 @@ export default function Dashboard() {
     setDeleteModalIsOpen(false);
   }
 
+  const getWallets = async () => {
+    try {
+      const response = await api.get(`/users/${user?.id}/wallets`);
+      console.log(response.data);
+      if (response.status === 200) {
+        setWallets(response.data.wallets);
+        setSelectedWallet(response.data.wallets[0]);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     refreshUser().then((isUserAuthenticated) => {
       if (isUserAuthenticated) {
-        setLoading(false);
+        console.log('Welcome back!');
+
+        if (user?.id) {
+          getWallets();
+        }
+
       } else {
         setLoading(true);
         router.push("/login");
@@ -123,6 +158,7 @@ export default function Dashboard() {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
 
   if (loading) {
     return (
@@ -144,19 +180,21 @@ export default function Dashboard() {
             </div>
             <Listbox value={selectedWallet} onChange={setSelectedWallet}>
               <Listbox.Button className="styled-select-button">
-                {selectedWallet.title}
+                {selectedWallet
+                  ? selectedWallet.name
+                  : "Selecione uma carteira"}
                 <CaretLeft size={24} />
               </Listbox.Button>
               <Listbox.Options className="styled-select-options">
                 {wallets.map((wallet) => (
                   <Listbox.Option key={wallet.id} value={wallet}>
-                    {wallet.title}
+                    {wallet.name}
                   </Listbox.Option>
                 ))}
               </Listbox.Options>
             </Listbox>
             <span>
-              <strong>Saldo: </strong>R$1.500,00
+              <strong>Saldo: </strong>{selectedWallet.amount}
             </span>
           </div>
           <button
@@ -586,7 +624,11 @@ export default function Dashboard() {
               </fieldset>
             </div>
           </main>
-          <button className="footer" type="button" onClick={handleTransactionModalClose}>
+          <button
+            className="footer"
+            type="button"
+            onClick={handleTransactionModalClose}
+          >
             Voltar
           </button>
         </TransactionModal>
